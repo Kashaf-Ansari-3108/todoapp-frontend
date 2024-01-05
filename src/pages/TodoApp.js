@@ -1,17 +1,25 @@
 import { React, useState, useEffect } from "react";
 import axios from "axios";
+import axiosconfig from '../config/axios'
+import { useNavigate } from "react-router-dom";
 
 const TodoApp = () => {
+  const navigate = useNavigate()
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState("");
   const [indexNumber, setIndexNumber] = useState(null);
   const [updateInput, setupdateInput] = useState("");
   const [refresh, setRefresh] = useState(false);
   
-
+useEffect(()=>{
+    const token = localStorage.getItem("token")
+    if(!token){
+       navigate("/");
+    }
+},[])
 
   useEffect(() => {
-    axios.get('https://odd-rose-magpie-tutu.cyclic.app/api/get').then((res) => {
+    axiosconfig.get('/get').then((res) => {
         console.log(res.data);
         setTodos(res.data.data);
     })
@@ -20,7 +28,7 @@ const TodoApp = () => {
     if (todo == "") {
       e.disabled = true;
     } else {
-      axios.post('https://odd-rose-magpie-tutu.cyclic.app/api/post',{todo}).then((res) => {
+      axiosconfig.post('/post',{todo}).then((res) => {
         console.log(res.data);
         setTodo("");
         setRefresh(!refresh);
@@ -30,7 +38,7 @@ const TodoApp = () => {
     }
   };
   const delAll = () => {
-    axios.delete(`https://odd-rose-magpie-tutu.cyclic.app/api/deleteAll`).then((res) => {
+    axiosconfig.delete(`/deleteAll`).then((res) => {
       console.log(res.data);
       setRefresh(!refresh);
      })
@@ -38,7 +46,7 @@ const TodoApp = () => {
   };
   const delTodo = (todo) => {
     // console.log(todo);
-    axios.delete(`https://odd-rose-magpie-tutu.cyclic.app/api/delete/${todo._id}`).then((res) => {
+    axiosconfig.delete(`/delete/${todo._id}`).then((res) => {
     console.log(res.data);
     setRefresh(!refresh);
    })
@@ -48,7 +56,7 @@ const TodoApp = () => {
       e.disabled = true;
     } else {
       console.log({todo: updateInput, id:todo._id});
-      axios.put(`https://odd-rose-magpie-tutu.cyclic.app/api/update`,{todo: updateInput, id:todo._id}).then((res) => {
+      axiosconfig.put(`/update`,{todo: updateInput, id:todo._id}).then((res) => {
         console.log(res.data);
         setRefresh(!refresh);
      })

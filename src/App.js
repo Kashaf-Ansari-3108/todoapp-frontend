@@ -1,14 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
-import TodoApp from './components/TodoApp';
+import { RouterProvider } from 'react-router-dom';
+import router from './config/router';
+import { AlertProvider } from './context/AlertContext';
+import AlertPopup from './component/AlertPopup';
 
 function App() {
+  
   return (
+    <AlertProvider>
     <div className="App">
       <header className="App-header">
-        <TodoApp/>
-      </header>
+      <AlertPopup/>
+      <RouterProvider router={router} />
+    </header>
     </div>
+    </AlertProvider>
   );
 }
 
